@@ -34,10 +34,10 @@ https://YOURDOMAIN.COM/index.php
 ====================================================
 */
 
-$CLIENT_ID = "PASTE_CLIENT_ID_HERE";
-$CLIENT_SECRET = "PASTE_CLIENT_SECRET_HERE";
-$REDIRECT_URI = "https://YOURDOMAIN.COM/index.php";
-$CHANNEL_ID = "PASTE_YOUR_CHANNEL_ID_HERE";
+$CLIENT_ID = "786280929254-";
+$CLIENT_SECRET = "1nmib6jgeca7bn5chb05udgl4fed0560.apps.googleusercontent.com";
+$REDIRECT_URI = "https://ytsub.free.nf/index.php";
+$CHANNEL_ID = "UCFoARvx-M-2G37e5GO036qA";
 
 /*
 ====================================================
