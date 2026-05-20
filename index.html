@@ -270,48 +270,28 @@ async function getSubscriberCount(){
 
 
 
-/* ================= SEND RESULT TO BOT ================= */
+
+
+
+    /* ================= SEND RESULT TO BOT ================= */
 
 async function sendResultToBot(verified){
 
-    let text = "";
-
-    if(verified){
-
-        text =
-`✅ YOUTUBE VERIFICATION SUCCESSFUL
-
-User ID: ${tg}
-
-Status: VERIFIED
-
-User can now use the bot.`;
-
-    }else{
-
-        text =
-`❌ YOUTUBE VERIFICATION FAILED
-
-User ID: ${tg}
-
-Status: NOT VERIFIED
-
-Possible reasons:
-• Subscription is private
-• User did not subscribe
-
-Ask user for screenshot verification.`;
-    }
-
     try{
 
-        const url =
-`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${tg}&text=${encodeURIComponent(text)}`;
-
-        await fetch(url,{
-            method:"GET",
-            mode:"no-cors"
-        });
+        await fetch(
+            "YOUR_WEBHOOK_URL",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    telegram_id: tg,
+                    verified: verified
+                })
+            }
+        );
 
     }catch(err){
 
@@ -320,12 +300,13 @@ Ask user for screenshot verification.`;
 }
 
 
+
+
+
     
 
 
-    
-
-    /* ================= SHOW RESULT ================= */
+        /* ================= SHOW RESULT ================= */
 
 function showResult(verified){
 
