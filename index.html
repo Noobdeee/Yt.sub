@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>YouTube Verification v7 </title>
+<title>YouTube Verification v8 </title>
 
 <style>
 
@@ -133,7 +133,7 @@ const API_KEY =
 /* ===== TELEGRAM BOT TOKEN ===== */
 
 const BOT_TOKEN =
-"YOUR_BOT_TOKEN_HERE";
+"8935826479:AAHTl1jOeQ9675kqnznebHT9LvHghI0xK7M";
 
 /* ================= TELEGRAM CHECK ================= */
 
@@ -270,60 +270,6 @@ async function getSubscriberCount(){
 
 
 
-    /* ================= SEND RESULT TO BOT ================= */
-
-async function sendResultToBot(verified){
-
-    const BOT_TOKEN =
-    "YOUR_REAL_BOT_TOKEN";
-
-    let text = "";
-
-    if(verified){
-
-        text =
-`✅ YOUTUBE VERIFICATION SUCCESSFUL
-
-User ID: ${tg}
-
-Status: VERIFIED`;
-
-    }else{
-
-        text =
-`❌ YOUTUBE VERIFICATION FAILED
-
-User ID: ${tg}
-
-Status: NOT VERIFIED`;
-    }
-
-    try{
-
-        await fetch(
-            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-            {
-                method:"POST",
-                mode:"no-cors",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    chat_id: tg,
-                    text: text
-                })
-            }
-        );
-
-    }catch(err){
-
-        console.log(err);
-    }
-}
-
-
-
-    
 /* ================= SEND RESULT TO BOT ================= */
 
 async function sendResultToBot(verified){
@@ -359,19 +305,13 @@ Ask user for screenshot verification.`;
 
     try{
 
-        await fetch(
-            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    chat_id: tg,
-                    text: text
-                })
-            }
-        );
+        const url =
+`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${tg}&text=${encodeURIComponent(text)}`;
+
+        await fetch(url,{
+            method:"GET",
+            mode:"no-cors"
+        });
 
     }catch(err){
 
@@ -380,8 +320,10 @@ Ask user for screenshot verification.`;
 }
 
 
+    
 
 
+    
 
     /* ================= SHOW RESULT ================= */
 
