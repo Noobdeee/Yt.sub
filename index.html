@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>YouTube Verification v8 </title>
+<title>YouTube Verification v9 </title>
 
 <style>
 
@@ -274,32 +274,21 @@ async function getSubscriberCount(){
 
 
     /* ================= SEND RESULT TO BOT ================= */
+/* ================= SEND RESULT TO BOT ================= */
 
-async function sendResultToBot(verified){
+function sendResultToBot(verified){
 
-    try{
+    let status = verified ? "true" : "false";
 
-        await fetch(
-            "YOUR_WEBHOOK_URL",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    telegram_id: tg,
-                    verified: verified
-                })
-            }
-        );
+    const url =
+`https://telebotcreator.com/api/webhook/Piro_Clasher_Bot/google_verified?tg=${tg}&verified=${status}`;
 
-    }catch(err){
+    fetch(url,{
+        method:"GET",
+        mode:"no-cors"
+    });
 
-        console.log(err);
-    }
 }
-
-
 
 
 
