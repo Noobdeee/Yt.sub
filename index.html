@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>YouTube Verification v3</title>
+<title>YouTube Verification v4</title>
 
 <style>
 
@@ -43,7 +43,6 @@ h2{
     font-size:18px;
     border:none;
     cursor:pointer;
-    transition:0.3s;
 }
 
 .btn:hover{
@@ -52,18 +51,24 @@ h2{
 
 .success{
     color:#00ff99;
-    font-size:24px;
+    font-size:22px;
     font-weight:bold;
 }
 
 .fail{
     color:#ff4444;
-    font-size:24px;
+    font-size:22px;
     font-weight:bold;
 }
 
 .hidden{
     display:none;
+}
+
+.subcount{
+    font-size:18px;
+    margin-top:10px;
+    color:#ffd700;
 }
 
 </style>
@@ -94,6 +99,7 @@ h2{
 <div id="resultBox" class="hidden">
 
     <div id="resultText"></div>
+    <div class="subcount" id="subCount"></div>
 
     <br><br>
 
@@ -118,19 +124,17 @@ const REDIRECT_URI =
 const CHANNEL_ID =
 "UCFoARvx-M-2G37e5GO036qA";
 
-/* ================= TELEGRAM CHECK + PERSIST TG ================= */
+/* ================= TELEGRAM CHECK ================= */
 
 const urlParams = new URLSearchParams(window.location.search);
 let tg = urlParams.get("tg");
 
-// restore tg after Google redirect
 if(!tg){
     tg = localStorage.getItem("tg");
 } else {
     localStorage.setItem("tg", tg);
 }
 
-// block only if REALLY not Telegram
 if(!tg){
     document.body.innerHTML = `
         <h1 style="color:red;text-align:center;margin-top:100px;">
@@ -157,7 +161,7 @@ function googleLogin(){
     window.location.href = authUrl;
 }
 
-/* ================= HANDLE GOOGLE REDIRECT ================= */
+/* ================= ON LOAD ================= */
 
 window.onload = async function(){
 
@@ -175,7 +179,7 @@ window.onload = async function(){
     }
 }
 
-/* ================= VERIFY YOUTUBE SUB ================= */
+/* ================= VERIFY SUB ================= */
 
 async function verifySubscription(token){
 
@@ -209,11 +213,36 @@ async function verifySubscription(token){
 
         }
 
+        // also fetch live subscriber count
+        getSubscriberCount();
         showResult(verified);
 
     }catch(err){
         console.log(err);
         showResult(false);
+    }
+}
+
+/* ================= LIVE SUB COUNT ================= */
+
+async function getSubscriberCount(){
+
+    try{
+
+        const res = await fetch(
+            "https://www.googleapis.com/youtube/v3/channels?part=statistics&id=" + CHANNEL_ID
+        );
+
+        const data = await res.json();
+
+        const count =
+        data.items?.[0]?.statistics?.subscriberCount || "0";
+
+        document.getElementById("subCount").innerHTML =
+        `Subscribers: <b>${count}</b>`;
+
+    }catch(err){
+        console.log(err);
     }
 }
 
@@ -234,7 +263,7 @@ function showResult(verified){
 
         resultText.innerHTML = `
             <div class="success">
-                🎉 VERIFIED
+                🎉 THANK YOU FOR SUBSCRIBING!
             </div>
         `;
 
