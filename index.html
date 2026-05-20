@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>YouTube Verification</title>
+<title>YouTube Verification v3</title>
 
 <style>
 
@@ -118,15 +118,23 @@ const REDIRECT_URI =
 const CHANNEL_ID =
 "UCFoARvx-M-2G37e5GO036qA";
 
-/* ================= TELEGRAM ONLY CHECK ================= */
+/* ================= TELEGRAM CHECK + PERSIST TG ================= */
 
 const urlParams = new URLSearchParams(window.location.search);
-const tg = urlParams.get("tg");
+let tg = urlParams.get("tg");
 
+// restore tg after Google redirect
+if(!tg){
+    tg = localStorage.getItem("tg");
+} else {
+    localStorage.setItem("tg", tg);
+}
+
+// block only if REALLY not Telegram
 if(!tg){
     document.body.innerHTML = `
         <h1 style="color:red;text-align:center;margin-top:100px;">
-            ❌ This page only works from Telegram bot
+            ❌ Open this from Telegram bot only
         </h1>
     `;
 }
@@ -149,7 +157,7 @@ function googleLogin(){
     window.location.href = authUrl;
 }
 
-/* ================= HANDLE TOKEN ================= */
+/* ================= HANDLE GOOGLE REDIRECT ================= */
 
 window.onload = async function(){
 
@@ -167,7 +175,7 @@ window.onload = async function(){
     }
 }
 
-/* ================= VERIFY SUB ================= */
+/* ================= VERIFY YOUTUBE SUB ================= */
 
 async function verifySubscription(token){
 
@@ -244,6 +252,8 @@ function showResult(verified){
 /* ================= RESET ================= */
 
 function resetPage(){
+
+    localStorage.removeItem("tg");
 
     window.location.href =
     window.location.pathname + "?tg=" + tg;
