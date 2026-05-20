@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>YouTube Verification</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    background:#111;
+    color:white;
+    font-family:Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    width:350px;
+    background:#1e1e1e;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+.btn{
+    background:red;
+    color:white;
+    padding:15px 25px;
+    text-decoration:none;
+    border-radius:10px;
+    display:inline-block;
+    font-size:18px;
+    border:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn:hover{
+    opacity:0.8;
+}
+
+.success{
+    color:#00ff99;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.fail{
+    color:#ff4444;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.hidden{
+    display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div id="stepBox">
+
+    <h2>Step 1: Subscribe</h2>
+
+    <a class="btn"
+       href="https://youtube.com/@Piro_Clasher"
+       target="_blank">
+       🔴 Subscribe
+    </a>
+
+    <br><br>
+
+    <h2>Step 2: Verify</h2>
+
+    <button class="btn" onclick="googleLogin()">
+        Login with Google
+    </button>
+
+</div>
+
+<div id="resultBox" class="hidden">
+
+    <div id="resultText"></div>
+
+    <br><br>
+
+    <button class="btn" onclick="resetPage()">
+        Try Again
+    </button>
+
+</div>
+
+</div>
+
+<script>
+
+/* ================= CONFIG ================= */
+
+const CLIENT_ID =
+"786280929254-1nmib6jgeca7bn5chb05udgl4fed056o.apps.googleusercontent.com";
+
+const REDIRECT_URI =
+"https://ytsub.free.nf/index.html";
+
+const CHANNEL_ID =
+"UCFoARvx-M-2G37e5GO036qA";
+
+/* ================= GET TG ================= */
+
+const urlParams = new URLSearchParams(window.location.search);
+const tg = urlParams.get("tg");
+
+if(!tg){
+    document.body.innerHTML =
+    "<h1 style='color:red;text-align:center'>❌ Invalid Access</h1>";
+}
+
+/* ================= GOOGLE LOGIN ================= */
+
+function googleLogin(){
+
+    const scope =
+    "openid email https://www.googleapis.com/auth/youtube.readonly";
+
+    const authUrl =
+    "https://accounts.google.com/o/oauth2/v2/auth"
+    + "?client_id=" + encodeURIComponent(CLIENT_ID)
+    + "&redirect_uri=" + encodeURIComponent(REDIRECT_URI)
+    + "&response_type=token"
+    + "&scope=" + encodeURIComponent(scope)
+    + "&prompt=consent";
+
+    window.location.href = authUrl;
+}
+
+/* ================= HANDLE TOKEN ================= */
+
+window.onload = async function(){
+
+    if(window.location.hash){
+
+        const hash = new URLSearchParams(
+            window.location.hash.substring(1)
+        );
+
+        const accessToken = hash.get("access_token");
+
+        if(accessToken){
+
+            verifySubscription(accessToken);
+        }
+    }
+}
+
+/* ================= VERIFY SUB ================= */
+
+async function verifySubscription(token){
+
+    try{
+
+        const response = await fetch(
+            "https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&mine=true&maxResults=50",
+            {
+                headers:{
+                    Authorization:"Bearer " + token
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        let verified = false;
+
+        if(data.items){
+
+            data.items.forEach(item => {
+
+                if(
+                    item.snippet.resourceId.channelId
+                    === CHANNEL_ID
+                ){
+                    verified = true;
+                }
+
+            });
+
+        }
+
+        showResult(verified);
+
+    }catch(err){
+
+        console.log(err);
+
+        showResult(false);
+
+    }
+
+}
+
+/* ================= SHOW RESULT ================= */
+
+function showResult(verified){
+
+    document.getElementById("stepBox")
+    .classList.add("hidden");
+
+    document.getElementById("resultBox")
+    .classList.remove("hidden");
+
+    const resultText =
+    document.getElementById("resultText");
+
+    if(verified){
+
+        resultText.innerHTML = `
+            <div class="success">
+                🎉 VERIFIED
+            </div>
+        `;
+
+    }else{
+
+        resultText.innerHTML = `
+            <div class="fail">
+                ❌ NOT VERIFIED
+            </div>
+        `;
+
+    }
+
+}
+
+/* ================= RESET ================= */
+
+function resetPage(){
+
+    window.location.href =
+    window.location.pathname + "?tg=" + tg;
+
+}
+
+</script>
+
+</body>
+</html>
