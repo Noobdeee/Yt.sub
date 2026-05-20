@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>YouTube Verification v6 </title>
+<title>YouTube Verification v7 </title>
 
 <style>
 
@@ -379,6 +379,48 @@ Ask user for screenshot verification.`;
     }
 }
 
+
+
+
+
+    /* ================= SHOW RESULT ================= */
+
+function showResult(verified){
+
+    document.getElementById("stepBox")
+    .classList.add("hidden");
+
+    document.getElementById("resultBox")
+    .classList.remove("hidden");
+
+    const resultText =
+    document.getElementById("resultText");
+
+    if(verified){
+
+        resultText.innerHTML = `
+            <div class="success">
+                🎉 THANK YOU FOR SUBSCRIBING!
+            </div>
+        `;
+
+    }else{
+
+        resultText.innerHTML = `
+            <div class="fail">
+                ❌ NOT VERIFIED
+                <br><br>
+                Please send screenshot to bot for manual verification.
+            </div>
+        `;
+    }
+}
+
+
+
+
+
+    
 /* ================= RESET ================= */
 
 function resetPage(){
