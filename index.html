@@ -130,6 +130,11 @@ const CHANNEL_ID =
 const API_KEY =
 "AIzaSyBU67a5wHBwt16Pty6HcL_Cb0XbYXIYFpI";
 
+/* ===== TELEGRAM BOT TOKEN ===== */
+
+const BOT_TOKEN =
+"YOUR_BOT_TOKEN_HERE";
+
 /* ================= TELEGRAM CHECK ================= */
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -226,11 +231,15 @@ async function verifySubscription(token){
 
         showResult(verified);
 
+        sendResultToBot(verified);
+
     }catch(err){
 
         console.log(err);
 
         showResult(false);
+
+        sendResultToBot(false);
     }
 }
 
@@ -245,8 +254,6 @@ async function getSubscriberCount(){
         );
 
         const data = await res.json();
-
-        console.log(data);
 
         const count =
         data.items?.[0]?.statistics?.subscriberCount || "0";
@@ -286,8 +293,65 @@ function showResult(verified){
         resultText.innerHTML = `
             <div class="fail">
                 ❌ NOT VERIFIED
+                <br><br>
+                Please send screenshot to bot for manual verification.
             </div>
         `;
+    }
+}
+
+/* ================= SEND RESULT TO BOT ================= */
+
+async function sendResultToBot(verified){
+
+    let text = "";
+
+    if(verified){
+
+        text =
+`✅ YOUTUBE VERIFICATION SUCCESSFUL
+
+User ID: ${tg}
+
+Status: VERIFIED
+
+User can now use the bot.`;
+
+    }else{
+
+        text =
+`❌ YOUTUBE VERIFICATION FAILED
+
+User ID: ${tg}
+
+Status: NOT VERIFIED
+
+Possible reasons:
+• Subscription is private
+• User did not subscribe
+
+Ask user for screenshot verification.`;
+    }
+
+    try{
+
+        await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    chat_id: tg,
+                    text: text
+                })
+            }
+        );
+
+    }catch(err){
+
+        console.log(err);
     }
 }
 
