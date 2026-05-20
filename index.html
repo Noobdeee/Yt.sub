@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>YouTube Verification</title>
+<title>YouTube Verification v6 </title>
 
 <style>
 
@@ -267,39 +267,63 @@ async function getSubscriberCount(){
     }
 }
 
-/* ================= SHOW RESULT ================= */
 
-function showResult(verified){
 
-    document.getElementById("stepBox")
-    .classList.add("hidden");
 
-    document.getElementById("resultBox")
-    .classList.remove("hidden");
+    /* ================= SEND RESULT TO BOT ================= */
 
-    const resultText =
-    document.getElementById("resultText");
+async function sendResultToBot(verified){
+
+    const BOT_TOKEN =
+    "YOUR_REAL_BOT_TOKEN";
+
+    let text = "";
 
     if(verified){
 
-        resultText.innerHTML = `
-            <div class="success">
-                🎉 THANK YOU FOR SUBSCRIBING!
-            </div>
-        `;
+        text =
+`✅ YOUTUBE VERIFICATION SUCCESSFUL
+
+User ID: ${tg}
+
+Status: VERIFIED`;
 
     }else{
 
-        resultText.innerHTML = `
-            <div class="fail">
-                ❌ NOT VERIFIED
-                <br><br>
-                Please send screenshot to bot for manual verification.
-            </div>
-        `;
+        text =
+`❌ YOUTUBE VERIFICATION FAILED
+
+User ID: ${tg}
+
+Status: NOT VERIFIED`;
+    }
+
+    try{
+
+        await fetch(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+            {
+                method:"POST",
+                mode:"no-cors",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    chat_id: tg,
+                    text: text
+                })
+            }
+        );
+
+    }catch(err){
+
+        console.log(err);
     }
 }
 
+
+
+    
 /* ================= SEND RESULT TO BOT ================= */
 
 async function sendResultToBot(verified){
