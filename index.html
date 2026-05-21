@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>YouTube Verification v9 </title>
+<title>YouTube Verification v9.0 </title>
 
 <style>
 
@@ -276,19 +276,7 @@ async function getSubscriberCount(){
     /* ================= SEND RESULT TO BOT ================= */
 /* ================= SEND RESULT TO BOT ================= */
 
-function sendResultToBot(verified){
 
-    let status = verified ? "true" : "false";
-
-    const url =
-`https://telebotcreator.com/api/webhook/Piro_Clasher_Bot/google_verified?tg=${tg}&verified=${status}`;
-
-    fetch(url,{
-        method:"GET",
-        mode:"no-cors"
-    });
-
-}
 
 
 
@@ -311,7 +299,29 @@ function showResult(verified){
     if(verified){
 
         resultText.innerHTML = `
-            <div class="success">
+            <function sendResultToBot(verified){
+
+    let status = verified ? "true" : "false";
+
+    const webhook =
+    urlParams.get("webhook");
+
+    if(!webhook){
+        return;
+    }
+
+    const finalUrl =
+    webhook
+    + "?tg=" + encodeURIComponent(tg)
+    + "&verified=" + status;
+
+    fetch(finalUrl,{
+        method:"GET",
+        mode:"no-cors"
+    });
+
+}
+div class="success">
                 🎉 THANK YOU FOR SUBSCRIBING!
             </div>
         `;
