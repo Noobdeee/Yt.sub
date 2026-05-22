@@ -272,10 +272,26 @@ async function getSubscriberCount(){
 
 
 
-
-    /* ================= SEND RESULT TO BOT ================= */
 /* ================= SEND RESULT TO BOT ================= */
+// MY WEBSITE CODE......
 
+
+function sendResultToBot(verified){
+
+    let status = verified ? "true" : "false";
+
+    const url =
+`https://api.telebotcreator.com/new-webhook?data=gAAAAABqDtWAZxeEgmlIfK1O8nszsYaMIauE1dIa8BfLvbMy2XintuLDl1Hj1UV4TpmjtMFUnJVUV27Acd-p1AtcLAn84xLk6gDLqodk3vJ99DjFy6IDIa1Hx6iz-wpIX2rW_hmmnYiZha32JWyn7m9TirOhC1OSFKkGMP3nfdYVOcptCW_q85OKZitiqEXzjx6lQhvLF9TRF7ftiiMFLq_eRiqw8tp1fQ%3D%3D?tg=1294066842&verified=true`;
+
+    fetch(url,{
+        method:"GET",
+        mode:"no-cors"
+    });
+
+}
+
+
+    
 
 
 
