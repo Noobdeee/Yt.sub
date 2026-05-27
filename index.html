@@ -270,25 +270,66 @@ async function getSubscriberCount(){
 
 
 
-function sendResultToBot(verified){
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+async function sendResultToBot(verified) {
     let status = verified ? "true" : "false";
 
-    const webhook =
-"https://api.telebotcreator.com/new-webhook?data=gAAAAABqDtWAZxeEgmlIfK1O8nszsYaMIauE1dIa8BfLvbMy2XintuLDl1Hj1UV4TpmjtMFUnJVUV27Acd-p1AtcLAn84xLk6gDLqodk3vJ99DjFy6IDIa1Hx6iz-wpIX2rW_hmmnYiZha32JWyn7m9TirOhC1OSFKkGMP3nfdYVOcptCW_q85OKZitiqEXzjx6lQhvLF9TRF7ftiiMFLq_eRiqw8tp1fQ%3D%3D";
+    const url =
+        `https://telebotcreator.com/api/webhook/Piro_Clasher_Bot/google_verified?tg=${tg}&verified=${status}`;
 
-    const finalUrl =
-        webhook
-        + "&tg=" + encodeURIComponent(tg)
-        + "&verified=" + status;
+    try {
+        const response = await fetch(url, {
+            method: "GET"
+        });
 
-    fetch(finalUrl,{
-        method:"GET",
-        mode:"no-cors"
-    });
+        const data = await response.json();
 
+        console.log("TBC webhook response:", data);
+
+        if (data.ok && data.result.status === "success") {
+            alert("Verification successful!");
+        } else {
+            alert("Verification failed: " + data.result.message);
+        }
+
+        return data;
+
+    } catch (error) {
+        console.error("Webhook request error:", error);
+        alert("Could not contact bot webhook.");
+    }
 }
 
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    
 
     
 
